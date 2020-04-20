@@ -26,7 +26,7 @@ function plugin(options = {}){
 		if(file.isBuffer()){
 			var contents = file.contents.toString(encoding);
 			// Load it into cheerio's virtual DOM for easy manipulation
-			var $ = cheerio.load(contents);
+			var $ = cheerio.load(contents, { decodeEntities: false });
 			var inline_flag = $(`img[${INLINE_ATTR}]`);
 			// If images with an inline attr are found that is the selection we want
 			var img_tags = inline_flag.length ? inline_flag : $(selector);
@@ -45,12 +45,12 @@ function plugin(options = {}){
 
 				// Find !inline attribute
 				var not_inline_flag = $img.attr(NOT_INLINE_ATTR);
-				
+
 				if(typeof not_inline_flag !== typeof undefined && not_inline_flag !== false){
 					// Remove the tag and don't process this file
 					return $img.removeAttr(NOT_INLINE_ATTR);
 				}
-				
+
 				// Count async ops
 				count++;
 
@@ -122,7 +122,7 @@ function getSrcBase64(base, src, callback){
 	}else{
 		// Get remote file
 		getHTTPBase64(src, callback);
-	}    
+	}
 }
 
 module.exports.plugin = plugin;
